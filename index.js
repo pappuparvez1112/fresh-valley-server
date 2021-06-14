@@ -3,7 +3,9 @@ const app = express()
 const MongoClient = require('mongodb').MongoClient;
 const cors=require('cors');
 const bodyParser=require('body-parser');
-require('dotenv').config()
+require('dotenv').config();
+const ObjectID = require('mongodb').ObjectID;
+
 const port = process.env.PORT || 5500;
 app.use(cors());
 app.use(express.json());
@@ -31,7 +33,21 @@ client.connect(err => {
       res.send(items)
       // console.log('from database',items)
     })
-  })  
+  }) 
+
+  app.get('/products/:id',(req,res)=>{
+    const id=req.params.id;
+    productcollection.find({_id:ObjectID(id)})
+    .toArray((err,items)=>{
+      res.send(items[0])
+      // console.log('from database',items)
+    })
+  })   
+  
+
+  
+
+  
 
   app.post('/addProduct',(req,res)=>{
     const newProduct=req.body;
