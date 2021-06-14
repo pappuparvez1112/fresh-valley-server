@@ -23,6 +23,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 client.connect(err => {
      console.log('connection err',err)
   const productcollection = client.db("freshValley").collection("products");
+  const orderscollection = client.db("freshValley").collection("orders");
   console.log('connected');
   // perform actions on the collection object
   // client.close();
@@ -43,6 +44,15 @@ client.connect(err => {
       // console.log('from database',items)
     })
   })   
+
+  app.post('/addOrder',(req,res)=>{
+    const orders=req.body;
+    
+    orderscollection.insertOne(orders,(err,result)=>{
+      console.log('inserted count',result.insertedCount);
+      res.send({count:result.insertedCount});
+    })
+  })
   
 
   
