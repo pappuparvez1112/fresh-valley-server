@@ -53,6 +53,24 @@ client.connect(err => {
       res.send({count:result.insertedCount});
     })
   })
+
+  
+  app.get('/orders',(req,res)=>{
+    orderscollection.find({})
+    .toArray((err,items)=>{
+      res.send(items);
+      // console.log('from database',items)
+    })
+  }) 
+
+  app.get('/orders/:email',(req,res)=>{
+    const email=req.params.email;
+    orderscollection.find({userEmail:email})
+    .toArray((err,items)=>{
+      res.send(items);
+      // console.log('from database',items)
+    })
+  }) 
   
 
   
@@ -66,6 +84,15 @@ client.connect(err => {
     .then(result=>{
       console.log('inserted count',result.insertedCount);
       res.send(result.insertedCount>0)
+    })
+  })
+
+  app.delete('/deleteorder/:id',(req,res)=>{
+    const id=req.params.id;
+    orderscollection.deleteOne({_id:ObjectID(id)},(err)=>{
+      if(!err){
+        res.send({count:1})
+      }
     })
   })
 });
